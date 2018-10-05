@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Electric Vehicle App</string>
+    <string name="next_page">Next Page</string>
+    <string name="activity_2_button">Activity 2 Button</string>
+    <string name="activity_2_item">Activity 2</string>
+    <color name="uwmgold">#FFbd00</color>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+</resources>
