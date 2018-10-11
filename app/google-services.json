@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "844524218756",
+    "firebase_url": "https://electric-vehicle-development.firebaseio.com",
+    "project_id": "electric-vehicle-development",
+    "storage_bucket": "electric-vehicle-development.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844524218756:android:00c68dd17b6458c4",
+        "android_client_info": {
+          "package_name": "edu.uwm.team10.electricvehicleapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "844524218756-cjaf5bkn8dgj6attg6js6t9msl28r489.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.uwm.team10.electricvehicleapp",
+            "certificate_hash": "db54eb34a5f6af2cffe2564436ec3cc403c94661"
+          }
+        },
+        {
+          "client_id": "844524218756-eom8mtn3nqq171mn7f54h41bs1dgk3v2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBC26CciQnWDaWUn8X2HlBBY8F0JF-TyrM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "844524218756-eom8mtn3nqq171mn7f54h41bs1dgk3v2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
