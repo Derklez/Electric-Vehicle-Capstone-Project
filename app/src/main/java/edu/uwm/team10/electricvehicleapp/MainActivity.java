@@ -1,9 +1,7 @@
 package edu.uwm.team10.electricvehicleapp;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
-import android.hardware.SensorEventListener;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -16,7 +14,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
@@ -28,6 +25,34 @@ public class MainActivity extends AppCompatActivity
     private static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 0;
 
     private DrawerLayout mDrawerLayout;
+    private Boolean isTripActive;
+    private long tripStartTime;
+    private long tripEndTime;
+    private float averageSpeed;
+
+    public Boolean getTripActive() {
+        return isTripActive;
+    }
+
+    public void setTripActive(Boolean tripActive) {
+        isTripActive = tripActive;
+    }
+
+    public long getTripStartTime() {
+        return tripStartTime;
+    }
+
+    public long getTripEndTime() {
+        return tripEndTime;
+    }
+
+    public float getAverageSpeed() {
+        return averageSpeed;
+    }
+
+    public void setAverageSpeed(float averageSpeed) {
+        this.averageSpeed = averageSpeed;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +78,7 @@ public class MainActivity extends AppCompatActivity
                 toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+        setTripActive(false);
 
         // Sets fragment to Home when opening. Rotating device and other odd movements will
         // reset the app to Home if there is not a null check
@@ -114,6 +140,18 @@ public class MainActivity extends AppCompatActivity
         myRef.setValue("Testing 123");
     }
 
+    public void startTrip() {
+        if (!getTripActive()) {
+            tripStartTime = System.nanoTime();
+            setTripActive(true);
+        }
+    }
 
+    public void endTrip() {
+        if (getTripActive()) {
+            tripEndTime = System.nanoTime();
+            setTripActive(false);
+        }
+    }
 
 }

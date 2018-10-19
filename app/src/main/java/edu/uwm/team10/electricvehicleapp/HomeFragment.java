@@ -20,11 +20,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import models.TripDateModel;
+import models.TripModel;
 
 public class HomeFragment extends Fragment implements SensorEventListener, LocationListener {
 
@@ -34,6 +39,9 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
     private Sensor accelerometer;
 
     private TextView xAccel, yAccel, zAccel;
+    private Button startTrip;
+    private EditText startVolts;
+    private EditText endVolts;
 
     private View view;
 
@@ -59,6 +67,35 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
         xAccel = view.findViewById(R.id.xAccel);
         yAccel = view.findViewById(R.id.yAccel);
         zAccel = view.findViewById(R.id.zAccel);
+        startVolts = view.findViewById(R.id.startVolts);
+        endVolts = view.findViewById(R.id.endVolts);
+        startTrip = view.findViewById(R.id.startTrip);
+
+        final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        // Set on click for start trip button. This should reconfigure the UI
+        startTrip.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (!((MainActivity)getActivity()).getTripActive()) { // If a trip is NOT active
+                    ((MainActivity)getActivity()).startTrip();
+                    startTrip.setText("End Trip");
+                } else {
+                    ((MainActivity)getActivity()).endTrip();
+                    startTrip.setText("Start Trip");
+                    double elapsedTime = (((MainActivity) getActivity()).getTripEndTime()
+                            - ((MainActivity) getActivity()).getTripStartTime()) / (1e+9);
+                    TripDateModel tripDateModel = new TripDateModel(
+                            ((MainActivity) getActivity()).getTripStartTime(),
+                            ((MainActivity) getActivity()).getTripEndTime(),
+                            "Wed, Oct 18 2018");
+                    TripModel tripModel = new TripModel(10.0, 1, 20,
+                            elapsedTime, Double.parseDouble(endVolts.getText().toString()), 1,
+                            Double.parseDouble(startVolts.getText().toString()), tripDateModel);
+                    String pushString = mDatabase.child("trips").push().getKey();
+                    mDatabase.child("trips").child(pushString).setValue(tripModel);
+                }
+            }
+        });
 
         LocationManager locationManager = (LocationManager)
                 getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -100,6 +137,7 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
         } else {
             float nCurrentSpeed = location.getSpeed();
             currentSpeed.setText(nCurrentSpeed + " m/s");
+            ((MainActivity)getActivity()).setAverageSpeed(nCurrentSpeed); // TODO
         }
     }
 
