@@ -1,5 +1,7 @@
 package models;
 
+import java.util.ArrayList;
+
 public class TripModel {
     private double averageSpeed;
     private long carId;
@@ -9,9 +11,10 @@ public class TripModel {
     private int id;
     private double startVolts;
     private TripDateModel tripDate;
+    private ArrayList<Double> speedMeasurements;
 
     public TripModel(double averageSpeed, long carId, double distanceTraveled, double elapsedTime,
-        double endVolts, int id, double startVolts, TripDateModel tripDate) {
+     double endVolts, int id, double startVolts, TripDateModel tripDate, ArrayList<Double> speedMeasurements) {
         this.averageSpeed = averageSpeed;
         this.carId = carId;
         this.distanceTraveled = distanceTraveled;
@@ -20,6 +23,7 @@ public class TripModel {
         this.id = id;
         this.startVolts = startVolts;
         this.tripDate = tripDate;
+        this.speedMeasurements = speedMeasurements;
     }
 
 
@@ -85,5 +89,9 @@ public class TripModel {
 
     public void setTripDate(TripDateModel tripDate) {
         this.tripDate = tripDate;
+    }
+
+    public ArrayList<Double> getSpeedMeasurements() {
+        return speedMeasurements;
     }
 }
