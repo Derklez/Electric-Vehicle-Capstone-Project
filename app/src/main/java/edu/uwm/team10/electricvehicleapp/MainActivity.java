@@ -1,6 +1,7 @@
 package edu.uwm.team10.electricvehicleapp;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -18,11 +19,14 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -157,25 +161,87 @@ public class MainActivity extends AppCompatActivity
 
     public void startTrip() {
         if (!getTripActive()) {
-            tripStartTime = System.nanoTime();
-            setTripActive(true);
-            speedMeasurements = new ArrayList<>(); // When starting a new trip, wipe old measurements
+            createStartDialog();
         }
+    }
+
+    private void createStartDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Please provide battery's starting voltage");
+
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        builder.setView(input);
+        builder.setPositiveButton("Start Trip", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                setStartVolts(Double.parseDouble(input.getText().toString()));
+                startTripHelper();
+            }
+        });
+        builder.setNegativeButton("Cancel Trip", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
+
+    private void startTripHelper() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (fragment instanceof HomeFragment) {
+            ((HomeFragment) fragment).setStartButtonText("End Trip");
+        }
+        tripStartTime = System.nanoTime();
+        setTripActive(true);
+        speedMeasurements = new ArrayList<>(); // When starting a new trip, wipe old measurements
     }
 
     public void endTrip() {
         if (getTripActive()) {
-            tripEndTime = System.nanoTime();
-            setTripActive(false);
-            double elapsedTime = (getTripEndTime()
-                    - getTripStartTime()) / (1e+9);
-            TripDateModel tripDateModel = new TripDateModel(getTripStartTime(),getTripEndTime(),
-                    "Wed, Oct 18 2018");
-            TripModel tripModel = new TripModel(10.0, 1, 20,
-                    elapsedTime, getEndVolts(), 1, getStartVolts(), tripDateModel, speedMeasurements);
-            String pushString = mDatabase.child("trips").push().getKey();
-            mDatabase.child("trips").child(pushString).setValue(tripModel);
+            createEndDialog();
         }
+    }
+
+    private void createEndDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Please provide battery's ending voltage");
+
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        builder.setView(input);
+        builder.setPositiveButton("End Trip", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                setEndVolts(Double.parseDouble(input.getText().toString()));
+                endTripHelper();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
+
+    private void endTripHelper() {
+        tripEndTime = System.nanoTime();
+        setTripActive(false);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (fragment instanceof HomeFragment) {
+            ((HomeFragment) fragment).setStartButtonText("Start Trip");
+        }
+        double elapsedTime = (getTripEndTime()
+                - getTripStartTime()) / (1e+9);
+        TripDateModel tripDateModel = new TripDateModel(getTripStartTime(),getTripEndTime(),
+                "Wed, Oct 18 2018");
+        TripModel tripModel = new TripModel(10.0, 1, 20,
+                elapsedTime, getEndVolts(), 1, getStartVolts(), tripDateModel, speedMeasurements);
+        String pushString = mDatabase.child("trips").push().getKey();
+        mDatabase.child("trips").child(pushString).setValue(tripModel);
     }
 
     @Override

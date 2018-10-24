@@ -14,8 +14,6 @@ import android.widget.TextView;
 public class HomeFragment extends Fragment {
 
     private Button startTrip;
-    private EditText startVolts;
-    private EditText endVolts;
 
     private View view;
 
@@ -25,8 +23,6 @@ public class HomeFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        startVolts = view.findViewById(R.id.startVolts);
-        endVolts = view.findViewById(R.id.endVolts);
         startTrip = view.findViewById(R.id.startTrip);
 
         if (((MainActivity)getActivity()).getTripActive()) {
@@ -40,12 +36,8 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 if (!((MainActivity)getActivity()).getTripActive()) { // If a trip is NOT active
                     ((MainActivity)getActivity()).startTrip();
-                    startTrip.setText("End Trip");
                 } else {
-                    ((MainActivity)getActivity()).setStartVolts(Double.parseDouble(startVolts.getText().toString()));
-                    ((MainActivity)getActivity()).setEndVolts(Double.parseDouble(endVolts.getText().toString()));
                     ((MainActivity)getActivity()).endTrip();
-                    startTrip.setText("Start Trip");
                 }
             }
         });
