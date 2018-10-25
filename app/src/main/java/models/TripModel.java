@@ -8,22 +8,23 @@ public class TripModel {
     private double distanceTraveled;
     private double elapsedTime;
     private double endVolts;
-    private int id;
     private double startVolts;
     private TripDateModel tripDate;
     private ArrayList<Double> speedMeasurements;
+    private ArrayList<ArrayList<Double>> accelMeasurements;
 
     public TripModel(double averageSpeed, long carId, double distanceTraveled, double elapsedTime,
-     double endVolts, int id, double startVolts, TripDateModel tripDate, ArrayList<Double> speedMeasurements) {
+     double endVolts, double startVolts, TripDateModel tripDate, ArrayList<Double> speedMeasurements,
+     ArrayList<ArrayList<Double>> accelMeasurements) {
         this.averageSpeed = averageSpeed;
         this.carId = carId;
         this.distanceTraveled = distanceTraveled;
         this.elapsedTime = elapsedTime;
         this.endVolts = endVolts;
-        this.id = id;
         this.startVolts = startVolts;
         this.tripDate = tripDate;
         this.speedMeasurements = speedMeasurements;
+        this.setAccelMeasurements(accelMeasurements);
     }
 
 
@@ -67,14 +68,6 @@ public class TripModel {
         this.endVolts = endVolts;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public double getStartVolts() {
         return startVolts;
     }
@@ -93,5 +86,13 @@ public class TripModel {
 
     public ArrayList<Double> getSpeedMeasurements() {
         return speedMeasurements;
+    }
+
+    public ArrayList<ArrayList<Double>> getAccelMeasurements() {
+        return accelMeasurements;
+    }
+
+    public void setAccelMeasurements(ArrayList<ArrayList<Double>> accelMeasurements) {
+        this.accelMeasurements = accelMeasurements;
     }
 }

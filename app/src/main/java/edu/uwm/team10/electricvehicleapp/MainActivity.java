@@ -33,7 +33,9 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import models.TripDateModel;
 import models.TripModel;
@@ -52,11 +54,12 @@ public class MainActivity extends AppCompatActivity
     private Boolean isTripActive;
     private long tripStartTime;
     private long tripEndTime;
-    private double averageSpeed;
     private double currentSpeed;
     private ArrayList<Double> speedMeasurements;
+    private ArrayList<ArrayList<Double>> accelMeasurements;
     private double startVolts;
     private double endVolts;
+    private double distanceTraveled; // In meters
 
 
     @Override
@@ -74,9 +77,9 @@ public class MainActivity extends AppCompatActivity
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         //accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION); // Linear Acceleration removes gravity
         sensorManager.registerListener(this, accelerometer,
-                500000); // Call every half second (500k microseconds)
+                500000, 500000); // Call every half second (500k microseconds)
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -195,7 +198,9 @@ public class MainActivity extends AppCompatActivity
         }
         tripStartTime = System.nanoTime();
         setTripActive(true);
+        setDistanceTraveled(0.0);
         speedMeasurements = new ArrayList<>(); // When starting a new trip, wipe old measurements
+        accelMeasurements = new ArrayList<>();
     }
 
     public void endTrip() {
@@ -236,16 +241,29 @@ public class MainActivity extends AppCompatActivity
         }
         double elapsedTime = (getTripEndTime()
                 - getTripStartTime()) / (1e+9);
+        String date = new SimpleDateFormat("MM-dd-yyyy").format(new Date());
         TripDateModel tripDateModel = new TripDateModel(getTripStartTime(),getTripEndTime(),
-                "Wed, Oct 18 2018");
-        TripModel tripModel = new TripModel(10.0, 1, 20,
-                elapsedTime, getEndVolts(), 1, getStartVolts(), tripDateModel, speedMeasurements);
+                date);
+        TripModel tripModel = new TripModel(calculateAverageSpeed(), 1, getDistanceTraveled(),
+                elapsedTime, getEndVolts(), getStartVolts(), tripDateModel, getSpeedMeasurements(),
+                getAccelMeasurements());
         String pushString = mDatabase.child("trips").push().getKey();
         mDatabase.child("trips").child(pushString).setValue(tripModel);
     }
 
+    /*
+    Accelerometer callback
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
+        if (isTripActive) {
+            ArrayList<Double> measurements = new ArrayList<>();
+            measurements.add((double) event.values[0]);
+            measurements.add((double) event.values[1]);
+            measurements.add((double) event.values[2]);
+            addAccelMeasurement(measurements);
+        }
+
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (fragment instanceof HomeFragment) {
             HomeFragment homeFragment = (HomeFragment) fragment;
@@ -281,9 +299,31 @@ public class MainActivity extends AppCompatActivity
             } else {
                 float nCurrentSpeed = location.getSpeed();
                 homeFragment.setSpeedText(nCurrentSpeed + " m/s");
-                if (isTripActive) { addSpeedMeasurement(nCurrentSpeed); }
+                if (isTripActive) {
+                    updateSpeedData(nCurrentSpeed);
+                }
             }
         }
+    }
+
+    private void updateSpeedData(float currentSpeed)  {
+        addSpeedMeasurement(currentSpeed);
+        double addedDistance = currentSpeed * 1.0; // distance = speed * time
+        addDistance(addedDistance);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (fragment instanceof HomeFragment) {
+            ((HomeFragment) fragment).setDistanceTraveledText("Meters: " + getDistanceTraveled());
+        }
+    }
+
+    private double calculateAverageSpeed() {
+        ArrayList<Double> speedMeasurements = getSpeedMeasurements();
+        int i;
+        double averageSpeed = 0.0;
+        for (i=0; i < speedMeasurements.size(); ++i) {
+            averageSpeed += speedMeasurements.get(i);
+        }
+        return (averageSpeed / speedMeasurements.size());
     }
 
     @Override
@@ -300,6 +340,8 @@ public class MainActivity extends AppCompatActivity
     public void onProviderDisabled(String provider) {
 
     }
+
+    private void addDistance(double distance) { distanceTraveled += distance; }
 
 
 
@@ -320,14 +362,6 @@ public class MainActivity extends AppCompatActivity
 
     public long getTripEndTime() {
         return tripEndTime;
-    }
-
-    public double getAverageSpeed() {
-        return averageSpeed;
-    }
-
-    public void setAverageSpeed(double averageSpeed) {
-        this.averageSpeed = averageSpeed;
     }
 
     public double getCurrentSpeed() { return currentSpeed; }
@@ -355,4 +389,19 @@ public class MainActivity extends AppCompatActivity
     public void setEndVolts(double endVolts) {
         this.endVolts = endVolts;
     }
+
+    public double getDistanceTraveled() { return distanceTraveled; }
+
+    public void setDistanceTraveled(double distance) { distanceTraveled = distance; }
+
+    public ArrayList<ArrayList<Double>> getAccelMeasurements() {
+        return accelMeasurements;
+    }
+
+    public void addAccelMeasurement(ArrayList<Double> measurement) {
+        if (measurement != null) {
+            accelMeasurements.add(measurement);
+        }
+    }
+
 }

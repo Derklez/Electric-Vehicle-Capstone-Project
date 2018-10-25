@@ -10,9 +10,8 @@
         android:id="@+id/startTrip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="298dp"
+        android:layout_centerVertical="true"
         android:onClick="onButtonTap"
         android:text="Start Trip"/>
 
@@ -30,8 +29,6 @@
         android:layout_width="155dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="2dp"
-        android:layout_marginTop="132dp"
         android:paddingLeft="20dp"
         android:text="X Accel"
         android:textSize="30sp" />
@@ -42,8 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/xAccelText"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="22dp"
-        android:layout_marginTop="192dp"
+        android:paddingTop="50sp"
         android:text="Y Accel"
         android:textSize="30sp" />
 
@@ -53,26 +49,23 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/yAccelText"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="250dp"
+        android:paddingTop="100sp"
         android:text="Z Accel"
         android:textSize="30sp" />
 
     <TextView
         android:id="@+id/xAccel"
-        android:layout_width="92dp"
-        android:layout_height="38dp"
-        android:layout_below="@+id/xAccelText"
+        android:layout_width="200dp"
+        android:layout_height="36dp"
+        android:layout_toRightOf="@+id/xAccelText"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="-38dp"
-        android:layout_marginEnd="716dp"
         android:text="x:"
         android:textSize="18sp" />
 
     <TextView
         android:id="@+id/yAccel"
-        android:layout_width="89dp"
-        android:layout_height="50dp"
+        android:layout_width="200dp"
+        android:layout_height="52dp"
         android:layout_alignStart="@+id/xAccel"
         android:layout_alignBottom="@+id/yAccelText"
         android:layout_marginStart="-1dp"
@@ -82,8 +75,8 @@
 
     <TextView
         android:id="@+id/zAccel"
-        android:layout_width="73dp"
-        android:layout_height="37dp"
+        android:layout_width="205dp"
+        android:layout_height="39dp"
         android:layout_alignStart="@+id/xAccel"
         android:layout_alignBottom="@+id/zAccelText"
         android:layout_marginTop="248dp"
@@ -111,6 +104,17 @@
         android:layout_toEndOf="@+id/startTrip"
         android:text=" m/s"
         android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/distanceTraveled"
+        android:layout_width="162dp"
+        android:layout_height="59dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="160dp"
+        android:layout_marginEnd="162dp"
+        android:text="meters: "
+        android:textSize="24sp" />
 
 
 </RelativeLayout>
