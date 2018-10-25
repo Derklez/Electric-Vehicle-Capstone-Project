@@ -67,6 +67,11 @@ public class HomeFragment extends Fragment {
         zAccel.setText(text);
     }
 
+    public void setDistanceTraveledText(String text) {
+        TextView distanceTraveled = view.findViewById(R.id.distanceTraveled);
+        distanceTraveled.setText(text);
+    }
+
     public void setStartButtonText(String text) {
         startTrip.setText(text);
     }
