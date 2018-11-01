@@ -19,6 +19,12 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".NewVehicle"
+            android:theme="@style/AppTheme.newVehicle"/>
+
+        <activity android:name=".NewBattery"
+            android:theme="@style/AppTheme.newVehicle"/>
+
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>

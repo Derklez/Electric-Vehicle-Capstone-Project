@@ -126,6 +126,9 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new SpeedFragment()).commit();
                 break;
+            case R.id.nav_maintenance:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new MaintenanceFragment()).commit();
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);

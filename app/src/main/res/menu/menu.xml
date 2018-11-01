@@ -11,7 +11,7 @@
             android:id="@+id/nav_speed"
             android:title="Speed" />
         <item
-            android:id="@+id/nav_battery_charge"
-            android:title="Battery Charge" />
+            android:id="@+id/nav_maintenance"
+            android:title="Maintenance" />
     </group>
 </menu>
