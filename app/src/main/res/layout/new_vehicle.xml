@@ -6,7 +6,7 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="352dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -14,60 +14,89 @@
         android:layout_marginTop="5dp"
         android:text="Create a new vehicle"
         android:textAlignment="center"
-        android:textSize="36sp" />
+        android:autoSizeMinTextSize="70sp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeStepGranularity="4sp" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="232dp"
-        android:layout_height="47dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="101dp"
-        android:layout_marginTop="122dp"
-        android:text="Enter Vehicle Name: "
-        android:textSize="24sp" />
+    <LinearLayout
+        android:id="@+id/upperLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/textView"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="294dp"
-        android:layout_height="46dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="104dp"
-        android:layout_marginTop="327dp"
-        android:text="Enter Vehicle Description: "
-        android:textSize="24sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/vehicleName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textView2"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="159dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Name" />
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Enter Vehicle Name: "
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="30sp"
+                android:autoSizeMaxTextSize="50sp"
+                android:autoSizeStepGranularity="3sp"/>
 
-    <EditText
-        android:id="@+id/vehicleDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textView2"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="183dp"
-        android:layout_marginEnd="166dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Description: " />
+            <EditText
+                android:id="@+id/vehicleName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="30sp"
+                android:autoSizeMaxTextSize="50sp"
+                android:autoSizeStepGranularity="3sp"
+                android:inputType="textPersonName"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Enter Vehicle Description: "
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="30sp"
+                android:autoSizeMaxTextSize="50sp"
+                android:autoSizeStepGranularity="3sp" />
+
+
+            <EditText
+                android:id="@+id/vehicleDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="30sp"
+                android:autoSizeMaxTextSize="50sp"
+                android:autoSizeStepGranularity="3sp"
+                android:inputType="textPersonName"/>
+
+        </LinearLayout>
 
     <Button
         android:id="@+id/submitVehicle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="189dp"
         android:text="Submit" />
+
+    </LinearLayout>
 </RelativeLayout>

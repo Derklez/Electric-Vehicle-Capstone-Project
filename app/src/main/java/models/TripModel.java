@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class TripModel {
     private double averageSpeed;
     private long carId;
+    private long batteryId;
     private double distanceTraveled;
     private double elapsedTime;
     private double endVolts;
@@ -13,11 +14,12 @@ public class TripModel {
     private ArrayList<Double> speedMeasurements;
     private ArrayList<ArrayList<Double>> accelMeasurements;
 
-    public TripModel(double averageSpeed, long carId, double distanceTraveled, double elapsedTime,
+    public TripModel(double averageSpeed, long carId, long batteryId, double distanceTraveled, double elapsedTime,
      double endVolts, double startVolts, TripDateModel tripDate, ArrayList<Double> speedMeasurements,
      ArrayList<ArrayList<Double>> accelMeasurements) {
         this.averageSpeed = averageSpeed;
         this.carId = carId;
+        this.setBatteryId(batteryId);
         this.distanceTraveled = distanceTraveled;
         this.elapsedTime = elapsedTime;
         this.endVolts = endVolts;
@@ -94,5 +96,13 @@ public class TripModel {
 
     public void setAccelMeasurements(ArrayList<ArrayList<Double>> accelMeasurements) {
         this.accelMeasurements = accelMeasurements;
+    }
+
+    public long getBatteryId() {
+        return batteryId;
+    }
+
+    public void setBatteryId(long batteryId) {
+        this.batteryId = batteryId;
     }
 }
