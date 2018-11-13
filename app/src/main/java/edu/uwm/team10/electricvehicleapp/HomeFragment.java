@@ -1,6 +1,8 @@
 package edu.uwm.team10.electricvehicleapp;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,14 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.Chronometer;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class HomeFragment extends Fragment {
 
-    private Button startTrip;
 
+    private static final String TAG = "MainActivity";
+    private Button startTrip;
+    private RelativeLayout homeFragment;
     private View view;
+    private Chronometer chronometer;
 
     @Nullable
     @Override
@@ -23,7 +30,9 @@ public class HomeFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        homeFragment = view.findViewById(R.id.homeFragment);
         startTrip = view.findViewById(R.id.startTrip);
+        //chronometer = view.findViewById(R.id.chronometer);
 
         if (((MainActivity)getActivity()).getTripActive()) {
             setStartButtonText("End Trip");
@@ -45,6 +54,22 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        LinearLayout lowerLayout = view.findViewById(R.id.lowerLayout);
+        LinearLayout upperLayout = view.findViewById(R.id.upperLayout);
+
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            lowerLayout.setOrientation(LinearLayout.HORIZONTAL);
+            upperLayout.setOrientation(LinearLayout.HORIZONTAL);
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            lowerLayout.setOrientation(LinearLayout.VERTICAL);
+            upperLayout.setOrientation(LinearLayout.VERTICAL);
+        }
+    }
+
     public void setSpeedText(String text) {
         if (view != null) {
             TextView currentSpeed = view.findViewById(R.id.currentSpeed);
@@ -52,19 +77,9 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    public void setXAccelText(String text) {
-        TextView xAccel = view.findViewById(R.id.xAccel);
-        xAccel.setText(text);
-    }
-
-    public void setYAccelText(String text) {
-        TextView yAccel = view.findViewById(R.id.yAccel);
-        yAccel.setText(text);
-    }
-
-    public void setZAccelText(String text) {
-        TextView zAccel = view.findViewById(R.id.zAccel);
-        zAccel.setText(text);
+    public Chronometer getChronometer() {
+        chronometer =view.findViewById(R.id.chronometer);
+        return chronometer;
     }
 
     public void setDistanceTraveledText(String text) {

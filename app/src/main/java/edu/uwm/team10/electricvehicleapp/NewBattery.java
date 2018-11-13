@@ -3,6 +3,8 @@ package edu.uwm.team10.electricvehicleapp;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
@@ -22,6 +24,12 @@ import models.BatteryModel;
 public class NewBattery extends Activity {
     final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("batteries");
     List<BatteryModel> batteryList;
+    EditText batteryName;
+    EditText batteryDescription;
+    EditText maxVoltage;
+    EditText cutoff;
+    EditText capacity;
+    Button submit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,23 +46,27 @@ public class NewBattery extends Activity {
 
         getWindow().setLayout((int)(width * 0.7), (int)(height * 0.7));
 
-        Button submit = findViewById(R.id.submitBattery);
+        batteryName = findViewById(R.id.batteryName);
+        batteryDescription = findViewById(R.id.batteryDescription);
+        maxVoltage = findViewById(R.id.maxVoltage);
+        cutoff = findViewById(R.id.cutoffVoltage);
+        capacity = findViewById(R.id.capacity);
+
+        setTextListeners();
+
+        submit = findViewById(R.id.submitBattery);
         submit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                EditText batteryName = findViewById(R.id.batteryName);
                 String name = batteryName.getText().toString();
-                EditText batteryDescription = findViewById(R.id.batteryDescription);
                 String description = batteryDescription.getText().toString();
-                EditText maxVoltage = findViewById(R.id.maxVoltage);
                 Double batteryMax = Double.parseDouble(maxVoltage.getText().toString());
-                EditText cutoff = findViewById(R.id.cutoffVoltage);
                 Double cutoffVoltage = Double.parseDouble(cutoff.getText().toString());
-                EditText capacity = findViewById(R.id.capacity);
-                Double batterycapacity = Double.parseDouble(capacity.getText().toString());
+                Double batteryCapacity = Double.parseDouble(capacity.getText().toString());
                 BatteryModel batteryModel = new BatteryModel(getFreshId(), name, description,
-                        batteryMax, cutoffVoltage, batterycapacity);
+                        batteryMax, cutoffVoltage, batteryCapacity);
                 String pushString = mDatabase.push().getKey();
                 mDatabase.child(pushString).setValue(batteryModel);
+                closeActivity();
             }
         });
     }
@@ -78,6 +90,24 @@ public class NewBattery extends Activity {
         });
     }
 
+    private void closeActivity() {
+        this.finish();
+    }
+
+    private void enableSubmitButton() {
+        int nameLength = batteryName.getText().toString().length();
+        int descriptionLength = batteryDescription.getText().toString().length();
+        int maxVoltageLength = maxVoltage.getText().toString().length();
+        int cutoffLength = cutoff.getText().toString().length();
+        int capacityLength = capacity.getText().toString().length();
+        if (nameLength > 0 && descriptionLength > 0 && maxVoltageLength > 0
+                && cutoffLength > 0 && capacityLength > 0) {
+            submit.setEnabled(true);
+        } else {
+            submit.setEnabled(false);
+        }
+    }
+
     private long getFreshId() {
         long id = 0;
         for (BatteryModel battery : batteryList) {
@@ -87,5 +117,86 @@ public class NewBattery extends Activity {
             }
         }
         return id;
+    }
+
+    private void setTextListeners() {
+        batteryName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                enableSubmitButton();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                enableSubmitButton();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+        batteryDescription.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                enableSubmitButton();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                enableSubmitButton();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        maxVoltage.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                enableSubmitButton();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                enableSubmitButton();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        cutoff.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                enableSubmitButton();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                enableSubmitButton();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        capacity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                enableSubmitButton();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                enableSubmitButton();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 }

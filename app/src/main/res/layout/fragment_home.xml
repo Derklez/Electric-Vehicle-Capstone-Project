@@ -4,6 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/darker_gray"
+    android:paddingLeft="16dp"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    android:paddingRight="16dp"
     android:id="@+id/homeFragment">
 
     <Button
@@ -15,106 +19,154 @@
         android:onClick="onButtonTap"
         android:text="Start Trip"/>
 
-    <android.support.design.widget.TextInputLayout
+    <LinearLayout
+        android:id="@+id/upperLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="157dp">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_above="@id/startTrip">
 
-    </android.support.design.widget.TextInputLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_weight="1">
 
-    <TextView
-        android:id="@+id/xAccelText"
-        android:layout_width="155dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:paddingLeft="20dp"
-        android:text="X Accel"
-        android:textSize="30sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Current Speed"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="30sp"
+                android:autoSizeMaxTextSize="50sp"
+                android:autoSizeStepGranularity="3sp"/>
+            <TextView
+                android:id="@+id/currentSpeed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="-.- m/s"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="40sp"
+                android:autoSizeMaxTextSize="60sp"
+                android:autoSizeStepGranularity="3sp"/>
 
-    <TextView
-        android:id="@+id/yAccelText"
-        android:layout_width="121dp"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/xAccelText"
-        android:layout_alignParentTop="true"
-        android:paddingTop="50sp"
-        android:text="Y Accel"
-        android:textSize="30sp" />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/zAccelText"
-        android:layout_width="121dp"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/yAccelText"
-        android:layout_alignParentTop="true"
-        android:paddingTop="100sp"
-        android:text="Z Accel"
-        android:textSize="30sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/xAccel"
-        android:layout_width="200dp"
-        android:layout_height="36dp"
-        android:layout_toRightOf="@+id/xAccelText"
-        android:layout_alignParentEnd="true"
-        android:text="x:"
-        android:textSize="18sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Average Speed"
+                android:gravity="center"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="30sp"
+                android:autoSizeMaxTextSize="50sp"
+                android:autoSizeStepGranularity="3sp"/>
+            <TextView
+                android:id="@+id/averageSpeed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0.0 m/s"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="40sp"
+                android:autoSizeMaxTextSize="60sp"
+                android:autoSizeStepGranularity="3sp"/>
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/yAccel"
-        android:layout_width="200dp"
-        android:layout_height="52dp"
-        android:layout_alignStart="@+id/xAccel"
-        android:layout_alignBottom="@+id/yAccelText"
-        android:layout_marginStart="-1dp"
-        android:layout_marginBottom="-11dp"
-        android:textSize="18sp"
-        tools:text="y: " />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/zAccel"
-        android:layout_width="205dp"
-        android:layout_height="39dp"
-        android:layout_alignStart="@+id/xAccel"
-        android:layout_alignBottom="@+id/zAccelText"
-        android:layout_marginTop="248dp"
-        android:layout_marginEnd="47dp"
-        android:text="z: "
-        android:textSize="18sp" />
+    <LinearLayout
+        android:id="@+id/lowerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@id/startTrip">
 
-    <TextView
-        android:id="@+id/currentSpeed"
-        android:layout_width="139dp"
-        android:layout_height="40dp"
-        android:layout_alignStart="@+id/zAccelText"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="9dp"
-        android:layout_marginBottom="165dp"
-        android:text="Speed"
-        android:textSize="30sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_weight="1">
 
-    <TextView
-        android:id="@+id/textView13"
-        android:layout_width="110dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="150dp"
-        android:layout_toEndOf="@+id/startTrip"
-        android:text=" m/s"
-        android:textSize="18sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Distance Traveled"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="30sp"
+                android:autoSizeMaxTextSize="50sp"
+                android:autoSizeStepGranularity="3sp"/>
+            <TextView
+                android:id="@+id/distanceTraveled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="0.0 m"
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="40sp"
+                android:autoSizeMaxTextSize="60sp"
+                android:autoSizeStepGranularity="3sp"/>
 
-    <TextView
-        android:id="@+id/distanceTraveled"
-        android:layout_width="162dp"
-        android:layout_height="59dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="160dp"
-        android:layout_marginEnd="162dp"
-        android:text="meters: "
-        android:textSize="24sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Trip Duration"
+                    android:gravity="center"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="30sp"
+                    android:autoSizeMaxTextSize="50sp"
+                    android:autoSizeStepGranularity="3sp"/>
+                <!--<TextView-->
+                    <!--android:id="@+id/tripDuration"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:gravity="center"-->
+                    <!--android:text="0:00:00"-->
+                    <!--android:autoSizeTextType="uniform"-->
+                    <!--android:autoSizeMinTextSize="40sp"-->
+                    <!--android:autoSizeMaxTextSize="60sp"-->
+                    <!--android:autoSizeStepGranularity="3sp"/>-->
+                <Chronometer
+                    android:id="@+id/chronometer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="40sp"
+                    android:autoSizeMaxTextSize="60sp"
+                    android:autoSizeStepGranularity="3sp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 
 </RelativeLayout>

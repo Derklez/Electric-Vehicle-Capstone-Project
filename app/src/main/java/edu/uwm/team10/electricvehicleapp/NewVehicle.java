@@ -3,6 +3,8 @@ package edu.uwm.team10.electricvehicleapp;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +26,9 @@ public class NewVehicle extends Activity {
 
     final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("vehicles");
     List<VehicleModel> vehicleList;
+    EditText vehicleName;
+    EditText vehicleDescription;
+    Button submit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +45,21 @@ public class NewVehicle extends Activity {
 
         getWindow().setLayout((int)(width * 0.7), (int)(height * 0.7));
 
-        Button submit = findViewById(R.id.submitVehicle);
+        vehicleName = findViewById(R.id.vehicleName);
+        vehicleDescription = findViewById(R.id.vehicleDescription);
+        submit = findViewById(R.id.submitVehicle);
+        submit.setEnabled(false); // Button is disabled by default to wait for user input
+
+        setTextListeners();
+
         submit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                EditText vehicleName = findViewById(R.id.vehicleName);
                 String name = vehicleName.getText().toString();
-                EditText vehicleDescription = findViewById(R.id.vehicleDescription);
                 String description = vehicleDescription.getText().toString();
                 VehicleModel vehicleModel = new VehicleModel(getFreshId(), name, description);
                 String pushString = mDatabase.push().getKey();
                 mDatabase.child(pushString).setValue(vehicleModel);
+                closeActivity();
             }
         });
     }
@@ -73,6 +83,20 @@ public class NewVehicle extends Activity {
         });
     }
 
+    private void closeActivity() {
+        this.finish();
+    }
+
+    private void enableSubmitButton() {
+        int nameLength = vehicleName.getText().toString().length();
+        int descriptionLength = vehicleDescription.getText().toString().length();
+        if (nameLength > 0 && descriptionLength > 0) {
+            submit.setEnabled(true);
+        } else {
+            submit.setEnabled(false);
+        }
+    }
+
     private long getFreshId() {
         long id = 0;
         for (VehicleModel vehicle : vehicleList) {
@@ -82,5 +106,40 @@ public class NewVehicle extends Activity {
             }
         }
         return id;
+    }
+
+    private void setTextListeners() {
+        vehicleName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                enableSubmitButton();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                enableSubmitButton();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        vehicleDescription.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                enableSubmitButton();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                enableSubmitButton();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 }
