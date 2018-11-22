@@ -14,6 +14,8 @@ public class TripModel {
     private ArrayList<Double> speedMeasurements;
     private ArrayList<ArrayList<Double>> accelMeasurements;
 
+    public TripModel() {}
+
     public TripModel(double averageSpeed, long carId, long batteryId, double distanceTraveled, double elapsedTime,
      double endVolts, double startVolts, TripDateModel tripDate, ArrayList<Double> speedMeasurements,
      ArrayList<ArrayList<Double>> accelMeasurements) {

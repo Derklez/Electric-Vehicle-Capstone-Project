@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity
                 break;
             case R.id.nav_voltage:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new VoltageFragment()).commit();
+                        new ComparisonFragment()).commit();
                 break;
             case R.id.nav_speed:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -192,9 +192,7 @@ public class MainActivity extends AppCompatActivity
         final EditText startVoltage = mView.findViewById(R.id.startingVoltage);
 
         final List<String> vehicleList = new ArrayList<>();
-        //vehicleList.add("Vehicles");
         final List<String> batteryList = new ArrayList<>();
-        //batteryList.add("Batteries");
 
         DatabaseReference vehicleRef = FirebaseDatabase.getInstance().getReference("vehicles");
         DatabaseReference batteryRef = FirebaseDatabase.getInstance().getReference("batteries");
@@ -240,14 +238,11 @@ public class MainActivity extends AppCompatActivity
         dialog.setPositiveButton("Start Trip", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (selectedVehicleName.equals("Vehicles") || selectedBatteryName.equals("Batteries")) {
-                    Toast.makeText(context, "Please select both a vehicle and battery", Toast.LENGTH_LONG);
-                } else {
-                    selectedVehicleName = vehicleSpinner.getSelectedItem().toString();
-                    selectedBatteryName = batterySpinner.getSelectedItem().toString();
-                    calculateIds();
-                    startTripHelper();
-                }
+                setStartVolts(Double.parseDouble(startVoltage.getText().toString()));
+                selectedVehicleName = vehicleSpinner.getSelectedItem().toString();
+                selectedBatteryName = batterySpinner.getSelectedItem().toString();
+                calculateIds();
+                startTripHelper();
             }
         });
         dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -410,6 +405,7 @@ public class MainActivity extends AppCompatActivity
                 elapsedTime, getEndVolts(), getStartVolts(), tripDateModel, getSpeedMeasurements(),
                 getAccelMeasurements());
         String pushString = mDatabase.child("trips").push().getKey();
+        Log.i(TAG, "LOOK HERE: " + tripModel.getAverageSpeed());
         mDatabase.child("trips").child(pushString).setValue(tripModel);
     }
 
@@ -474,10 +470,14 @@ public class MainActivity extends AppCompatActivity
         ArrayList<Double> speedMeasurements = getSpeedMeasurements();
         int i;
         double averageSpeed = 0.0;
-        for (i=0; i < speedMeasurements.size(); ++i) {
-            averageSpeed += speedMeasurements.get(i);
+        if (speedMeasurements.size() != 0) {
+            for (i = 0; i < speedMeasurements.size(); ++i) {
+                averageSpeed += speedMeasurements.get(i);
+            }
+            return (averageSpeed / speedMeasurements.size());
+        } else {
+          return averageSpeed;
         }
-        return (averageSpeed / speedMeasurements.size());
     }
 
     public void toggleChronometer() {
