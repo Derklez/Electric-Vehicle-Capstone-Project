@@ -54,12 +54,13 @@ public class SpeedFragment extends Fragment {
 
 
     private DataPoint[] generateSpeedData() {
-        // int count = 30;
         if (((MainActivity)getActivity()).getSpeedMeasurements() != null) {
             int count = ((MainActivity) getActivity()).getSpeedMeasurements().size();
+            if (count > 50) {
+                count = 50;
+            }
             DataPoint[] speedValues = new DataPoint[count];
-            for (int i = 0; i < count; ++i) {
-                double x = i;
+            for (int i = count; i >= 0; --i) {
                 speedValues[i] = new DataPoint(i, ((MainActivity) getActivity()).getSpeedMeasurements().get(i));
             }
             return speedValues;

@@ -5,6 +5,8 @@ public class TripDateModel {
     private long tripEnd;
     private String tripString;
 
+    public TripDateModel() {}
+
     public TripDateModel(long tripStart, long tripEnd, String tripString) {
         this.tripStart = tripStart;
         this.tripEnd = tripEnd;
