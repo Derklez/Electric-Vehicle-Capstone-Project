@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/holo_blue_dark"><![CDATA[
+    android:id="@+id/bluetoothFragment">
+
+
+
+
+
+
+
+
+    ]]>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="135dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="432dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/bon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ON" />
+
+        <Button
+            android:id="@+id/boff"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="OFF" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="135dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="298dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/bconnect"
+            android:layout_width="match_parent"
+            android:layout_height="59dp"
+            android:text="Connect" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="135dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="157dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/bdiscover"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="discover" />
+
+        <Button
+            android:id="@+id/bnext"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:text="Next" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="135dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="3dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/bname"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Device Name"
+            android:textAlignment="center"
+            android:textSize="36sp" />
+    </LinearLayout>
+</RelativeLayout>

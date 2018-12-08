@@ -37,6 +37,8 @@ import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -151,6 +153,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_maintenance:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new MaintenanceFragment()).commit();
+            case R.id.nav_bluetooth:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new BlueToothFragment()).commit();
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
