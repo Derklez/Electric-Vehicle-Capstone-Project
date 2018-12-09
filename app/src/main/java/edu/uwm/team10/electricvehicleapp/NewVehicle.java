@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,16 +25,18 @@ import models.VehicleModel;
 
 public class NewVehicle extends Activity {
 
-    final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("vehicles");
+    private static final String TAG = "VehicleActivity";
+    final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     List<VehicleModel> vehicleList;
     EditText vehicleName;
     EditText vehicleDescription;
-    Button submit;
+    Button submitBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_vehicle);
+        Log.i(TAG, "Created this thing");
 
         vehicleList = new ArrayList<>();
 
@@ -47,18 +50,21 @@ public class NewVehicle extends Activity {
 
         vehicleName = findViewById(R.id.vehicleName);
         vehicleDescription = findViewById(R.id.vehicleDescription);
-        submit = findViewById(R.id.submitVehicle);
-        submit.setEnabled(false); // Button is disabled by default to wait for user input
+        submitBtn = findViewById(R.id.submitVehicle);
+        submitBtn.setEnabled(false); // Button is disabled by default to wait for user input
 
         setTextListeners();
 
-        submit.setOnClickListener(new View.OnClickListener() {
+        submitBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String name = vehicleName.getText().toString();
                 String description = vehicleDescription.getText().toString();
                 VehicleModel vehicleModel = new VehicleModel(getFreshId(), name, description);
                 String pushString = mDatabase.push().getKey();
-                mDatabase.child(pushString).setValue(vehicleModel);
+                mDatabase.child("vehicles").child(pushString).setValue(vehicleModel);
+                Toast t = Toast.makeText(getApplicationContext(),
+                        "New vehicle successfully created", Toast.LENGTH_SHORT);
+                t.show();
                 closeActivity();
             }
         });
@@ -90,10 +96,11 @@ public class NewVehicle extends Activity {
     private void enableSubmitButton() {
         int nameLength = vehicleName.getText().toString().length();
         int descriptionLength = vehicleDescription.getText().toString().length();
+        Log.i(TAG, "Description length: " + descriptionLength);
         if (nameLength > 0 && descriptionLength > 0) {
-            submit.setEnabled(true);
+            submitBtn.setEnabled(true);
         } else {
-            submit.setEnabled(false);
+            submitBtn.setEnabled(false);
         }
     }
 

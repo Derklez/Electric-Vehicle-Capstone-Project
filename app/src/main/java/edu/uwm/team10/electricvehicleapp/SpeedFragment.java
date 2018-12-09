@@ -13,6 +13,8 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.util.ArrayList;
+
 public class SpeedFragment extends Fragment {
 
     private final Handler mHandler = new Handler();
@@ -40,10 +42,10 @@ public class SpeedFragment extends Fragment {
             @Override
             public void run() {
                 mSeries1.resetData(generateSpeedData());
-                mHandler.postDelayed(this, 500);
+                mHandler.postDelayed(this, 1000);
             }
         };
-        mHandler.postDelayed(mTimer1, 500);
+        mHandler.postDelayed(mTimer1, 1000);
     }
 
     @Override
@@ -54,16 +56,16 @@ public class SpeedFragment extends Fragment {
 
 
     private DataPoint[] generateSpeedData() {
-        if (((MainActivity)getActivity()).getSpeedMeasurements() != null) {
-            int count = ((MainActivity) getActivity()).getSpeedMeasurements().size();
-            if (count > 50) {
-                count = 50;
+        ArrayList<Double> speedMeasurements = ((MainActivity)getActivity()).getSpeedMeasurements();
+        if (speedMeasurements != null) {
+            if (speedMeasurements.size() > 0) {
+                int count = speedMeasurements.size();
+                DataPoint[] speedValues = new DataPoint[count];
+                for (int i = count - 1; i >= 0; --i) {
+                    speedValues[i] = new DataPoint(i, speedMeasurements.get(i));
+                }
+                return speedValues;
             }
-            DataPoint[] speedValues = new DataPoint[count];
-            for (int i = count; i >= 0; --i) {
-                speedValues[i] = new DataPoint(i, ((MainActivity) getActivity()).getSpeedMeasurements().get(i));
-            }
-            return speedValues;
         }
         return new DataPoint[0];
     }

@@ -1,6 +1,7 @@
 package edu.uwm.team10.electricvehicleapp;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,7 +35,8 @@ import models.VehicleModel;
 
 public class ComparisonFragment extends Fragment {
 
-    private Button selectTrips;
+    private Button selectTripsBtn;
+    private Button openComparisonDialogBtn;
     private View view;
     ArrayAdapter tripAdapter;
     TripModel trip1Select;
@@ -63,7 +66,8 @@ public class ComparisonFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_comparison, container, false);
-        selectTrips = view.findViewById(R.id.selectTrips);
+        selectTripsBtn = view.findViewById(R.id.selectTrips);
+        openComparisonDialogBtn = view.findViewById(R.id.openComparisonDialog);
         DatabaseReference vehicleRef = FirebaseDatabase.getInstance().getReference("vehicles");
         DatabaseReference batteryRef = FirebaseDatabase.getInstance().getReference("batteries");
         vehicleList = new ArrayList<>();
@@ -90,10 +94,16 @@ public class ComparisonFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
-        selectTrips.setOnClickListener(new View.OnClickListener() {
+        selectTripsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 openSelectTripDialog();
+            }
+        });
+        openComparisonDialogBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openComparisonGraphActivity();
             }
         });
 
@@ -169,6 +179,8 @@ public class ComparisonFragment extends Fragment {
         dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                trip1Select = null;
+                trip2Select = null;
                 dialog.dismiss();
             }
         });
@@ -201,6 +213,53 @@ public class ComparisonFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) { return; }
         });
+    }
+
+    /*
+    Prepares the comparison graph activity. Speed ArrayLists need to be converted
+    into primitive double arrays. This requires a transformation from:
+    ArrayList<Double> --> Double[] --> double[]. We then calculate absolute vectors of acceleration
+    to add to the bundle passed to ComparisonGraphDialogActivity.
+     */
+    private void openComparisonGraphActivity() {
+        if (trip1Select == null || trip2Select == null) {
+            Toast toast = Toast.makeText(getContext(),
+                    "No selected trips, cannot open graph", Toast.LENGTH_LONG);
+            toast.show();
+            return;
+        }
+        Intent intent = new Intent(getActivity(), ComparisonGraphDialogActivity.class);
+        Bundle bundle = new Bundle();
+
+        Double[] tmpArray = new Double[trip1Select.getSpeedMeasurements().size()];
+        tmpArray = trip1Select.getSpeedMeasurements().toArray(tmpArray);
+        double[] speedData1 = convertDoubleArrayToPrimitive(tmpArray);
+        bundle.putDoubleArray("speedData1", speedData1);
+
+        tmpArray = new Double[trip2Select.getSpeedMeasurements().size()];
+        tmpArray = trip2Select.getSpeedMeasurements().toArray(tmpArray);
+        double[] speedData2 = convertDoubleArrayToPrimitive(tmpArray);
+        bundle.putDoubleArray("speedData2", speedData2);
+
+        double[] accelData1 = calculateAbsoluteAccelVectors(trip1Select.getAccelMeasurements());
+        bundle.putDoubleArray("accelData1", accelData1);
+
+        double[] accelData2 = calculateAbsoluteAccelVectors(trip2Select.getAccelMeasurements());
+        bundle.putDoubleArray("accelData2", accelData2);
+
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    /*
+    Converts Double array to a double array. Used when creating new Activities.
+     */
+    private double[] convertDoubleArrayToPrimitive(Double[] arr) {
+        double[] ret = new double[arr.length];
+        for (int i=0; i < arr.length; ++i) {
+            ret[i] = arr[i];
+        }
+        return ret;
     }
 
     private void runComparison() {
@@ -253,5 +312,30 @@ public class ComparisonFragment extends Fragment {
         } else {
             voltsPerKmTrip2.setText("--- volts/km");
         }
+    }
+
+    private double[] calculateAbsoluteAccelVectors(ArrayList<ArrayList<Double>> accelMeasurements) {
+
+        double[] absolute = new double[accelMeasurements.size()];//array used to store absolute vectors
+
+        for (int i = 0; i < accelMeasurements.size(); ++i) {
+            double x = accelMeasurements.get(i).get(0);
+            double y = accelMeasurements.get(i).get(1);
+            double z = accelMeasurements.get(i).get(2);
+
+            double a;//absolute value of all vectors, xyz
+
+            x = x * x;
+            y = y * y;
+            z = z * z;
+
+            a = x + y + z;
+            a = Math.sqrt(a);
+            a = a - 9.8;
+            a = Math.abs(a);
+            absolute[i] = a;
+        }
+
+        return absolute;
     }
 }
