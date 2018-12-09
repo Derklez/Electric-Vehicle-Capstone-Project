@@ -9,7 +9,7 @@
             android:title="Trip Comparisons"/>
         <item
             android:id="@+id/nav_speed"
-            android:title="Speed" />
+            android:title="Speed Graph" />
         <item
             android:id="@+id/nav_maintenance"
             android:title="Maintenance" />
