@@ -21,11 +21,14 @@
 
         <activity android:name=".NewVehicle"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
-            android:theme="@style/AppTheme.newVehicle"/>
+            android:theme="@style/Theme.AppCompat.Dialog"/>
 
         <activity android:name=".NewBattery"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
-            android:theme="@style/AppTheme.newVehicle"/>
+            android:theme="@style/Theme.AppCompat.Dialog"/>
+
+        <activity android:name=".ComparisonGraphDialogActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"/>
 
     </application>
 
