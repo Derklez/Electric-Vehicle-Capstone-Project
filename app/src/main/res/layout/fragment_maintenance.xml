@@ -10,20 +10,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <ImageView
+
+        <Button
             android:id="@+id/newVehicle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center"
-            app:srcCompat="@drawable/ic_car_vector" />
+            android:text="Add New Vehicle"
+            android:gravity="center"/>
 
-        <ImageView
+        <Button
             android:id="@+id/newBattery"
+            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:gravity="center"
-            app:srcCompat="@drawable/ic_car_battery" />
+            android:text="Add New Battery"/>
+
     </LinearLayout>
 </RelativeLayout>

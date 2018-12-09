@@ -2,7 +2,6 @@ package edu.uwm.team10.electricvehicleapp;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,7 +18,7 @@ public class HomeFragment extends Fragment {
 
 
     private static final String TAG = "MainActivity";
-    private Button startTrip;
+    private Button startTripBtn;
     private RelativeLayout homeFragment;
     private View view;
     private Chronometer chronometer;
@@ -31,8 +30,7 @@ public class HomeFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_home, container, false);
 
         homeFragment = view.findViewById(R.id.homeFragment);
-        startTrip = view.findViewById(R.id.startTrip);
-        //chronometer = view.findViewById(R.id.chronometer);
+        startTripBtn = view.findViewById(R.id.startTrip);
 
         if (((MainActivity)getActivity()).getTripActive()) {
             setStartButtonText("End Trip");
@@ -40,8 +38,10 @@ public class HomeFragment extends Fragment {
             setStartButtonText("Start Trip");
         }
 
+        setChronometer();
+
         // Set on click for start trip button. This should reconfigure the UI
-        startTrip.setOnClickListener(new View.OnClickListener() {
+        startTripBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (!((MainActivity)getActivity()).getTripActive()) { // If a trip is NOT active
                     ((MainActivity)getActivity()).startTrip();
@@ -78,8 +78,12 @@ public class HomeFragment extends Fragment {
     }
 
     public Chronometer getChronometer() {
-        chronometer =view.findViewById(R.id.chronometer);
+        chronometer = view.findViewById(R.id.chronometer);
         return chronometer;
+    }
+
+    public void setChronometer() {
+        ((MainActivity)getActivity()).setHomeFragmentChronometer();
     }
 
     public void setDistanceTraveledText(String text) {
@@ -88,7 +92,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void setStartButtonText(String text) {
-        startTrip.setText(text);
+        startTripBtn.setText(text);
     }
 
 

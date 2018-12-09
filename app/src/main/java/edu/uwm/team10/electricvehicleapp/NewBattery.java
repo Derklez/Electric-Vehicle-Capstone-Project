@@ -9,6 +9,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,14 +23,14 @@ import java.util.List;
 import models.BatteryModel;
 
 public class NewBattery extends Activity {
-    final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("batteries");
+    final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     List<BatteryModel> batteryList;
     EditText batteryName;
     EditText batteryDescription;
     EditText maxVoltage;
     EditText cutoff;
     EditText capacity;
-    Button submit;
+    Button submitBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +55,9 @@ public class NewBattery extends Activity {
 
         setTextListeners();
 
-        submit = findViewById(R.id.submitBattery);
-        submit.setOnClickListener(new View.OnClickListener() {
+        submitBtn = findViewById(R.id.submitBattery);
+        submitBtn.setEnabled(false);
+        submitBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String name = batteryName.getText().toString();
                 String description = batteryDescription.getText().toString();
@@ -65,8 +67,11 @@ public class NewBattery extends Activity {
                 BatteryModel batteryModel = new BatteryModel(getFreshId(), name, description,
                         batteryMax, cutoffVoltage, batteryCapacity);
                 String pushString = mDatabase.push().getKey();
-                mDatabase.child(pushString).setValue(batteryModel);
+                mDatabase.child("batteries").child(pushString).setValue(batteryModel);
                 closeActivity();
+                Toast t = Toast.makeText(getApplicationContext(),
+                        "New battery successfully created", Toast.LENGTH_SHORT);
+                t.show();
             }
         });
     }
@@ -102,9 +107,9 @@ public class NewBattery extends Activity {
         int capacityLength = capacity.getText().toString().length();
         if (nameLength > 0 && descriptionLength > 0 && maxVoltageLength > 0
                 && cutoffLength > 0 && capacityLength > 0) {
-            submit.setEnabled(true);
+            submitBtn.setEnabled(true);
         } else {
-            submit.setEnabled(false);
+            submitBtn.setEnabled(false);
         }
     }
 
@@ -123,7 +128,6 @@ public class NewBattery extends Activity {
         batteryName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                enableSubmitButton();
             }
 
             @Override
@@ -136,9 +140,7 @@ public class NewBattery extends Activity {
         });
         batteryDescription.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                enableSubmitButton();
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -146,15 +148,12 @@ public class NewBattery extends Activity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s) {}
 
-            }
         });
         maxVoltage.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                enableSubmitButton();
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -162,15 +161,12 @@ public class NewBattery extends Activity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s) {}
 
-            }
         });
         cutoff.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                enableSubmitButton();
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -178,15 +174,12 @@ public class NewBattery extends Activity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s) {}
 
-            }
         });
         capacity.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                enableSubmitButton();
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -194,9 +187,8 @@ public class NewBattery extends Activity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s) {}
 
-            }
         });
     }
 }

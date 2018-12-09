@@ -180,7 +180,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textAlignment="center"
-                        android:text="Volts used per km: "/>
+                        android:text="Average volts per km: "/>
                     <TextView
                         android:id="@+id/voltsPerKmTrip1"
                         android:layout_width="match_parent"
@@ -334,7 +334,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:textAlignment="center"
-                        android:text="Volts used per km: "/>
+                        android:text="Average volts per km: "/>
                     <TextView
                         android:id="@+id/voltsPerKmTrip2"
                         android:layout_width="match_parent"
@@ -342,7 +342,22 @@
                         android:textAlignment="center"
                         android:layout_weight="1"/>
                 </LinearLayout>
+
             </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/openComparisonDialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Open Speed &amp; Acceleration Graph Comparison" />
 
         </LinearLayout>
 
