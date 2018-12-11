@@ -172,9 +172,11 @@ public class MainActivity extends AppCompatActivity
             case R.id.nav_maintenance:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new MaintenanceFragment()).commit();
+                break;
             case R.id.nav_bluetooth:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                         new BlueToothFragment()).commit();
+                break;
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
