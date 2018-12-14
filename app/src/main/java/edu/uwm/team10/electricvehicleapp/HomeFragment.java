@@ -54,6 +54,10 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Called when the user turns the screen so the layouts adjust accordingly.
+     * @param newConfig contains Android configuration information about the device
+     */
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -74,6 +78,13 @@ public class HomeFragment extends Fragment {
         if (view != null) {
             TextView currentSpeed = view.findViewById(R.id.currentSpeed);
             currentSpeed.setText(text);
+        }
+    }
+
+    public void setAverageSpeedText(String text) {
+        if (view != null) {
+            TextView averageSpeed = view.findViewById(R.id.averageSpeed);
+            averageSpeed.setText(text);
         }
     }
 

@@ -47,6 +47,10 @@ public class MaintenanceFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Starts a new activity based on which button was clicked
+     * @param dialogFlag 0 indicates vehicle button was pressed, 1 indicates battery button
+     */
     private void openNewDialog(int dialogFlag) {
         Intent intent;
         if (dialogFlag == 0) {
@@ -55,33 +59,5 @@ public class MaintenanceFragment extends Fragment {
             intent = new Intent(getActivity(), NewBattery.class);
         }
         startActivity(intent);
-
-//        LayoutInflater inflater = (LayoutInflater) getContext().
-//                getSystemService(LAYOUT_INFLATER_SERVICE);
-//        View popupView;
-//        if (dialogFlag == 0) {
-//            popupView = inflater.inflate(R.layout.new_vehicle, null);
-//        } else {
-//            popupView = inflater.inflate(R.layout.new_battery, null);
-//        }
-//
-//        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-//        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-//        boolean focusable = true; // User can click outside of popup to dismiss it
-//        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            popupWindow.setElevation(20);
-//        }
-//
-//        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-//
-//        popupView.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                popupWindow.dismiss();
-//                return true;
-//            }
-//        });
     }
 }

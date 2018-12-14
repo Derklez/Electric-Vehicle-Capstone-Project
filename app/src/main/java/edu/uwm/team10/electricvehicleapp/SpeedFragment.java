@@ -35,6 +35,10 @@ public class SpeedFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Callback for Android Graph View. Every 1 second regenerate the speed data so it is constantly
+     * updated. Might need to make this delay long for efficiency.
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -48,13 +52,19 @@ public class SpeedFragment extends Fragment {
         mHandler.postDelayed(mTimer1, 1000);
     }
 
+    /**
+     * Required for Android Graph View.
+     */
     @Override
     public void onPause() {
         mHandler.removeCallbacks(mTimer1);
         super.onPause();
     }
 
-
+    /**
+     * Based on the current speed measurements, create an array of DataPoints for the graph to use.
+     * @return an array of DataPoints for the graph to use.
+     */
     private DataPoint[] generateSpeedData() {
         ArrayList<Double> speedMeasurements = ((MainActivity)getActivity()).getSpeedMeasurements();
         if (speedMeasurements != null) {

@@ -23,7 +23,7 @@ import java.util.List;
 import models.BatteryModel;
 
 public class NewBattery extends Activity {
-    final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("batteries");
     List<BatteryModel> batteryList;
     EditText batteryName;
     EditText batteryDescription;
@@ -67,7 +67,8 @@ public class NewBattery extends Activity {
                 BatteryModel batteryModel = new BatteryModel(getFreshId(), name, description,
                         batteryMax, cutoffVoltage, batteryCapacity);
                 String pushString = mDatabase.push().getKey();
-                mDatabase.child("batteries").child(pushString).setValue(batteryModel);
+                //mDatabase.child("batteries").child(pushString).setValue(batteryModel);
+                mDatabase.child(pushString).setValue(batteryModel);
                 closeActivity();
                 Toast t = Toast.makeText(getApplicationContext(),
                         "New battery successfully created", Toast.LENGTH_SHORT);
@@ -76,6 +77,9 @@ public class NewBattery extends Activity {
         });
     }
 
+    /**
+     * Called on activity start. Generates a list of batteries based on Firebase data.
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -95,10 +99,17 @@ public class NewBattery extends Activity {
         });
     }
 
+    /**
+     * Self explanatory.
+     */
     private void closeActivity() {
         this.finish();
     }
 
+    /**
+     * Checks that each field is at least partially filled out.
+     * TODO: add more validation for a battery object.
+     */
     private void enableSubmitButton() {
         int nameLength = batteryName.getText().toString().length();
         int descriptionLength = batteryDescription.getText().toString().length();
@@ -113,6 +124,10 @@ public class NewBattery extends Activity {
         }
     }
 
+    /**
+     * Figures out the max id of current batteries and returns 1 higher. All ids are ints
+     * @return highest id + 1
+     */
     private long getFreshId() {
         long id = 0;
         for (BatteryModel battery : batteryList) {
@@ -124,6 +139,10 @@ public class NewBattery extends Activity {
         return id;
     }
 
+    /**
+     * Called from onCreate to generate callbacks for each text field. Any time an edittext field
+     * is changed, call the enabledSubmitButton function.
+     */
     private void setTextListeners() {
         batteryName.addTextChangedListener(new TextWatcher() {
             @Override

@@ -47,6 +47,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -91,6 +93,14 @@ public class MainActivity extends AppCompatActivity
     ArrayAdapter batteryAdapter;
 
 
+    /**
+     * Entry point of the application. This method primarily sets up all the hardware so it can take
+     * readings and sets up a few other things like the drawer layout so the user can actually
+     * interact with the application. The content view is activity_main.xml, but this is purely
+     * a container for other views. On application load, the home fragment is the first "real" thing
+     * displayed to the user.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,6 +164,12 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Called when an item in the hamburger menu is selected. This method loads up the associated
+     * fragment choosen by the user.
+     * @param menuItem the menu item that was clicked
+     * @return always return true
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
@@ -183,6 +199,11 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    /**
+     * Opens hamburger menu
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -193,6 +214,9 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Closes hamburger menu
+     */
     @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -203,12 +227,20 @@ public class MainActivity extends AppCompatActivity
         super.onBackPressed();
     }
 
+    /**
+     * Simple public helper method
+     */
     public void startTrip() {
         if (!getTripActive()) {
             createStartDialog();
         }
     }
 
+    /**
+     * This method builds the dialog that pops up when a user starts a trip. The layout is defined
+     * in dialog_start_trip.xml. Each component has appropriate listeners attached and the spinners
+     * are loaded with the vehicles and batteries from Firebase.
+     */
     private void createStartDialog() {
         final AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.dialog_start_trip, null);
@@ -339,6 +371,13 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * Called when user officially starts trip from dialog confirmation. Based on what vehicle &
+     * battery the user selected from the spinners in the dialog, this method will go through all
+     * the Firebase entries and figure out the corresponding ID so the trip can be stored properly.
+     * This method exists because we couldn't figure out how to make a map of key/values for the
+     * spinners.
+     */
     private void calculateIds() {
         DatabaseReference vehicleRef = mDatabase.child("vehicles");
         ValueEventListener vehicleEventListener = new ValueEventListener() {
@@ -379,6 +418,10 @@ public class MainActivity extends AppCompatActivity
         batteryRef.addListenerForSingleValueEvent(batteryEventListener);
     }
 
+    /**
+     * Called when user officially starts a trip from the dialog. This method resets all appropriate
+     * fields so a new trip is properly tracked.
+     */
     private void startTripHelper() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         tripStartTime = System.nanoTime();
@@ -393,18 +436,26 @@ public class MainActivity extends AppCompatActivity
         accelMeasurements = new ArrayList<>();
     }
 
+    /**
+     * Simple helper method for when the end trip button is pressed.
+     */
     public void endTrip() {
         if (getTripActive()) {
             createEndDialog();
         }
     }
 
+    /**
+     * Generates a dialog for the user to officially end a trip. Unlike the createStartDialog()
+     * method, this method has no corresponding xml layout file. This is mainly due to that there
+     * is only a single text field that needs to be entered.
+     */
     private void createEndDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Please provide battery's ending voltage");
 
         final EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         builder.setView(input);
         builder.setPositiveButton("End Trip", new DialogInterface.OnClickListener() {
             @Override
@@ -422,6 +473,11 @@ public class MainActivity extends AppCompatActivity
         builder.show();
     }
 
+    /**
+     * Triggered when user presses confirmation button in the end trip dialog. This method both
+     * saves the trip to Firebase and freezes all appropriate readings as to not gather useless
+     * data.
+     */
     private void endTripHelper() {
         tripEndTime = System.nanoTime();
         setTripActive(false);
@@ -446,10 +502,10 @@ public class MainActivity extends AppCompatActivity
         mDatabase.child("trips").child(pushString).setValue(tripModel);
     }
 
-    /*
-    Accelerometer callback. First we reset recentAccelMeasurements and add the new update. This is
-    called every time there is an accelerometer update (which is a lot), so we set a Handler in the
-    onCreate method to only add data to our "true" accelerometer data every half second.
+    /**
+     * Accelerometer callback. First we reset recentAccelMeasurements and add the new update. This is
+     *     called every time there is an accelerometer update (which is a lot), so we set a Handler in the
+     *     onCreate method to only add data to our "true" accelerometer data every half second.
      */
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -463,6 +519,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Required for accelerometer
+     * @param sensor
+     * @param accuracy
+     */
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
@@ -480,6 +541,11 @@ public class MainActivity extends AppCompatActivity
                 500000);
     }
 
+    /**
+     * Callback for location service so we can get the user's current speed. This updates the UI
+     * with the current speed and saves the speed measurement. Should be called every ~1 second.
+     * @param location most recent location reading which contains speed and other information
+     */
     @Override
     public void onLocationChanged(Location location) {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
@@ -493,23 +559,37 @@ public class MainActivity extends AppCompatActivity
             if (location == null) {
                 homeFragment.setSpeedText("-.- m/s");
             } else {
-                homeFragment.setSpeedText(recentSpeedMeasurement + " m/s");
+                double roundedSpeed = round(recentSpeedMeasurement, 2);
+                homeFragment.setSpeedText(roundedSpeed + " m/s");
             }
         }
     }
 
+    /**
+     * Based on the most recent speed measurement taken, this to the overall distance traveled
+     *     assuming 1 second per speed reading. If the user is on the home fragment, this method also
+     *     updates the text fields to reflect the most up-to-date information.
+     */
     private void updateSpeedData() {
         if (isTripActive) {
             addSpeedMeasurement(recentSpeedMeasurement);
-            double addedDistance = recentSpeedMeasurement * 0.5; // distance = speed * time
+            double addedDistance = recentSpeedMeasurement * 1.0; // distance = speed * time
             addDistance(addedDistance);
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
             if (fragment instanceof HomeFragment) {
-                ((HomeFragment) fragment).setDistanceTraveledText("" + getDistanceTraveled() + " m");
+                double distanceRounded = round(getDistanceTraveled(), 2);
+                ((HomeFragment) fragment).setDistanceTraveledText("" + distanceRounded + " m");
+                double averageSpeedRounded = round(calculateAverageSpeed(), 2);
+                ((HomeFragment) fragment).setAverageSpeedText("" + averageSpeedRounded + " m/s");
             }
         }
     }
 
+    /**
+     * Calculates average speed over the entire trip. This should likely be highly modified if not
+     * entirely removed down the road due to efficiency concerns. It made our video look better.
+     * @return average speed over the trip so far
+     */
     private double calculateAverageSpeed() {
         ArrayList<Double> speedMeasurements = getSpeedMeasurements();
         int i;
@@ -524,6 +604,23 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Rounds a double to a certain number of decimal points
+     * @param value the number to be rounded
+     * @param places how many decimal places to round to
+     * @return the rounded number
+     */
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    /**
+     * Starts or stops the chronometer from tracking time.
+     */
     public void toggleChronometer() {
         if (getTripActive()) {
             homeChronometer.setBase(SystemClock.elapsedRealtime());
@@ -533,9 +630,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    /*
-    This starts the chronometer on the home fragment back up after a fragment change. Without this,
-    if the user changes fragments, the chronometer displayed would stick at 00:00.
+    /**
+     * This starts the chronometer on the home fragment back up after a fragment change. Without this,
+     *     if the user changes fragments, the chronometer would stick at 00:00.
      */
     public void setHomeFragmentChronometer() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
@@ -635,10 +732,13 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    //determines how many "bumps" we go over using accelerometer data.
-    //takes a percent, if a 10% difference in vector is a bump, use .10 as input.
-    //will need to change from all vectors to just the horizontal vector for bumpy roads
-    //can use similar idea for changing direction frequently? Perhaps even frequent speed up and slow down horizontally
+    /**
+     * determines how many "bumps" we go over using accelerometer data.
+     * takes a percent, if a 10% difference in vector is a bump, use .10 as input.
+     * will need to change from all vectors to just the horizontal vector for bumpy roads
+     * can use similar idea for changing direction frequently? Perhaps even frequent speed up and slow down horizontally
+     * @param percent difference required to be considered a bump
+     */
     public void bumpyRoad(double percent) {
 
 

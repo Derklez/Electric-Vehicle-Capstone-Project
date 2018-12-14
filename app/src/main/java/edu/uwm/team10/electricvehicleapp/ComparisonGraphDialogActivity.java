@@ -133,12 +133,12 @@ public class ComparisonGraphDialogActivity extends AppCompatActivity {
     }
 
 
-    /*
-    Resets the X axis of the graph to the appropriate length. First check if both trips have at
-    least one graph displayed. Since speed and accel arrays from a trip should be the same length,
-    we use the speed array length to set the X axis size. If both trips have at least one of speed
-    or accel displayed, find the max length and set the axis to that. If only one of the trips is
-    active, set X axis to that size. If neither, default to 8 (AndroidGraphView default)
+    /**
+     *     Resets the X axis of the graph to the appropriate length. First check if both trips have at
+     *     least one graph displayed. Since speed and accel arrays from a trip should be the same length,
+     *     we use the speed array length to set the X axis size. If both trips have at least one of speed
+     *     or accel displayed, find the max length and set the axis to that. If only one of the trips is
+     *     active, set X axis to that size. If neither, default to 8 (AndroidGraphView default)
      */
     private void setGraphAxisSize() {
         boolean trip1Displayed = speedTrip1.isChecked() || accelTrip1.isChecked();
@@ -156,6 +156,12 @@ public class ComparisonGraphDialogActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Based on a passed in array, loop through each element and add it to an Android Graph View
+     * DataPoint array to be displayed on a graph.
+     * @param arrayData arbitrary data set to be turned into data points
+     * @return the array of in order data points
+     */
     private DataPoint[] generateDataPoints(double[] arrayData) {
         if (arrayData != null) {
             if (arrayData.length > 0) {

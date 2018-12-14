@@ -262,6 +262,10 @@ public class ComparisonFragment extends Fragment {
         return ret;
     }
 
+    /**
+     * Sets all text fields in the comparison fragment based on the 2 selected trips from the comparison
+     * graph dialog.
+     */
     private void runComparison() {
         TripModel trip1 = trip1Select;
         TripModel trip2 = trip2Select;
@@ -314,6 +318,12 @@ public class ComparisonFragment extends Fragment {
         }
     }
 
+    /**
+     * Returns calculated absolute vectors based on the x, y, and z measurements taken by the
+     * accelerometer.
+     * @param accelMeasurements an array of x, y, & z vectors of individual acceleration measurements
+     * @return an array of absolute vectors
+     */
     private double[] calculateAbsoluteAccelVectors(ArrayList<ArrayList<Double>> accelMeasurements) {
 
         double[] absolute = new double[accelMeasurements.size()];//array used to store absolute vectors

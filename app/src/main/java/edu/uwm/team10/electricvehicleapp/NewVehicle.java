@@ -26,7 +26,7 @@ import models.VehicleModel;
 public class NewVehicle extends Activity {
 
     private static final String TAG = "VehicleActivity";
-    final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("vehicles");
     List<VehicleModel> vehicleList;
     EditText vehicleName;
     EditText vehicleDescription;
@@ -61,7 +61,8 @@ public class NewVehicle extends Activity {
                 String description = vehicleDescription.getText().toString();
                 VehicleModel vehicleModel = new VehicleModel(getFreshId(), name, description);
                 String pushString = mDatabase.push().getKey();
-                mDatabase.child("vehicles").child(pushString).setValue(vehicleModel);
+                //mDatabase.child("vehicles").child(pushString).setValue(vehicleModel);
+                mDatabase.child(pushString).setValue(vehicleModel);
                 Toast t = Toast.makeText(getApplicationContext(),
                         "New vehicle successfully created", Toast.LENGTH_SHORT);
                 t.show();
@@ -70,6 +71,9 @@ public class NewVehicle extends Activity {
         });
     }
 
+    /**
+     * Called on activity start. Generates a list of vehicles based on Firebase data.
+     */
     @Override
     protected void onStart() {
         super.onStart();
@@ -89,14 +93,19 @@ public class NewVehicle extends Activity {
         });
     }
 
+    /**
+     * Self explanatory.
+     */
     private void closeActivity() {
         this.finish();
     }
 
+    /**
+     * Checks that each field is at least partially filled out.
+     */
     private void enableSubmitButton() {
         int nameLength = vehicleName.getText().toString().length();
         int descriptionLength = vehicleDescription.getText().toString().length();
-        Log.i(TAG, "Description length: " + descriptionLength);
         if (nameLength > 0 && descriptionLength > 0) {
             submitBtn.setEnabled(true);
         } else {
@@ -104,6 +113,10 @@ public class NewVehicle extends Activity {
         }
     }
 
+    /**
+     * Figures out the max id of current vehicles and returns 1 higher. All ids are ints
+     * @return highest id + 1
+     */
     private long getFreshId() {
         long id = 0;
         for (VehicleModel vehicle : vehicleList) {
@@ -115,6 +128,10 @@ public class NewVehicle extends Activity {
         return id;
     }
 
+    /**
+     * Called from onCreate to generate callbacks for each text field. Any time an edittext field
+     * is changed, call the enabledSubmitButton function.
+     */
     private void setTextListeners() {
         vehicleName.addTextChangedListener(new TextWatcher() {
             @Override
